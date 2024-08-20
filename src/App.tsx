@@ -1,26 +1,27 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { useEffect } from "react";
+import "./App.css";
+import { fetchData } from "./services/dataService";
+import { setConfig } from "./redux/appSlice";
+import { Routes } from "./Routes";
+import { useAppDispatch } from "./hooks/useRedux";
+import { ThemeProvider } from "@mui/material";
+import { theme } from "./theme/theme";
 
-function App() {
+export const App = () => {
+  const dispatch = useAppDispatch();
+
+  const fetchAndSetConfig = async () => {
+    const temp = await fetchData();
+    dispatch(setConfig(temp));
+  };
+
+  useEffect(() => {
+    fetchAndSetConfig();
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <ThemeProvider theme={theme}>
+      <Routes />
+    </ThemeProvider>
   );
-}
-
-export default App;
+};
